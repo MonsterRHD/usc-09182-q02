@@ -1,12 +1,12 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import json, os
-class Handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == '/health':
-            body = json.dumps({'status':'ok'}).encode()
-            self.send_response(200); self.send_header('Content-Type','application/json'); self.send_header('Content-Length',str(len(body))); self.end_headers(); self.wfile.write(body)
-        else:
-            self.send_response(404); self.end_headers()
-    def log_message(self, *_): pass
-def run(): HTTPServer(('0.0.0.0', int(os.getenv('PORT','8000'))), Handler).serve_forever()
-if __name__ == '__main__': run()
+"""服务入口：组合存储、领域服务与 HTTP 层。
+
+环境变量：
+- PORT       监听端口，默认 8000
+- LINEAGE_DB 事件日志文件路径，默认 $DATA_DIR/lineage.jsonl（DATA_DIR 默认 ./data）
+"""
+from .api import run
+
+__all__ = ["run"]
+
+if __name__ == "__main__":
+    run()
